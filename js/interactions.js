@@ -1,4 +1,4 @@
-// S.O.S Gabriel — page-specific interactions. Loaded on every page but each
+// VG Construção — page-specific interactions. Loaded on every page but each
 // block only wires up if the matching page/elements are present.
 (function () {
   'use strict';
@@ -17,9 +17,12 @@
     if (!grid) return;
     var nums = grid.querySelectorAll('[data-count-target]');
     if (!nums.length) return;
+    function format(value) {
+      return value.toLocaleString('pt-BR');
+    }
     function run() {
       if (reducedMotion) {
-        nums.forEach(function (el) { el.textContent = el.getAttribute('data-count-target') + (el.getAttribute('data-count-suffix') || ''); });
+        nums.forEach(function (el) { el.textContent = format(Number(el.getAttribute('data-count-target'))) + (el.getAttribute('data-count-suffix') || ''); });
         return;
       }
       var start = performance.now();
@@ -30,7 +33,7 @@
         nums.forEach(function (el) {
           var target = Number(el.getAttribute('data-count-target'));
           var suffix = el.getAttribute('data-count-suffix') || '';
-          el.textContent = Math.round(target * ease) + suffix;
+          el.textContent = format(Math.round(target * ease)) + suffix;
         });
         if (t < 1) requestAnimationFrame(step);
       }
@@ -343,7 +346,7 @@
       }
 
       var phone = (window.WA_DATA && window.WA_DATA.PHONE) || '5545988431052';
-      var msg = 'Olá! Vim pelo site do S.O.S Gabriel.\n\n' +
+      var msg = 'Olá! Vim pelo site da VG Construção.\n\n' +
         'Nome: ' + nome.value.trim() + '\n' +
         'Serviço: ' + servico.value + '\n' +
         'Bairro: ' + bairro.value.trim() + '\n\n' +
