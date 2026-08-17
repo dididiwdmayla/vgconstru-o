@@ -1,4 +1,4 @@
-// S.O.S Gabriel — shared site chrome: header, footer, WhatsApp links,
+// VG Construção — shared site chrome: header, footer, WhatsApp links,
 // scroll-reveal, broken-image fallback and the CTA button loop.
 // Runs on every page. Page-specific behaviour lives in js/interactions.js.
 (function () {
@@ -7,22 +7,22 @@
   var WA_DATA = {
     PHONE: '5545988431052',
     MESSAGES: {
-      header: 'Olá! Vim pelo site do S.O.S Gabriel e quero falar sobre um serviço.',
-      hero: 'Olá! Vim pelo site e quero um orçamento sem compromisso.',
-      pintura: 'Olá! Vim pelo site e quero um orçamento de pintura.',
-      ceramica: 'Olá! Vim pelo site e quero um orçamento de cerâmica e porcelanato.',
-      eletrica: 'Olá! Vim pelo site e quero um orçamento de elétrica e instalações.',
-      moveis: 'Olá! Vim pelo site e quero um orçamento de montagem de móveis.',
-      manutencao: 'Olá! Vim pelo site e quero um orçamento de manutenção geral.',
-      desentupimento: 'Olá! Vim pelo site e preciso de um desentupimento.',
-      calhas: 'Olá! Vim pelo site e quero um orçamento de limpeza de calhas e telhados.',
-      acabamentos: 'Olá! Vim pelo site e quero um orçamento de acabamentos.',
-      servicosGenerico: 'Olá! Não encontrei o serviço que preciso na lista do site, mas quero um orçamento.',
-      contato: 'Olá! Vim pela página de contato do site e quero um orçamento.',
-      galeria: 'Olá! Vi a galeria no site e quero um orçamento.',
-      ctaFinal: 'Olá! Vim pelo site e quero resolver meu serviço hoje.',
-      footer: 'Olá! Vim pelo site do S.O.S Gabriel.',
-      floating: 'Olá! Vim pelo site e quero um orçamento rápido.'
+      header: 'Olá! Vim pelo site da VG Construção e quero falar sobre uma obra ou serviço.',
+      hero: 'Olá! Vim pelo site da VG Construção e quero um orçamento sem compromisso.',
+      construcao: 'Olá! Vim pelo site da VG Construção e quero um orçamento de construção e ampliação.',
+      reforma: 'Olá! Vim pelo site da VG Construção e quero um orçamento de reforma e acabamento.',
+      pintura: 'Olá! Vim pelo site da VG Construção e quero um orçamento de pintura.',
+      ceramica: 'Olá! Vim pelo site da VG Construção e quero um orçamento de cerâmica e porcelanato.',
+      eletrica: 'Olá! Vim pelo site da VG Construção e quero um orçamento de elétrica.',
+      instalacoes: 'Olá! Vim pelo site da VG Construção e quero um orçamento de instalações.',
+      telhado: 'Olá! Vim pelo site da VG Construção e quero um orçamento de telhado e impermeabilização.',
+      manutencao: 'Olá! Vim pelo site da VG Construção e quero um orçamento de manutenção geral.',
+      servicosGenerico: 'Olá! Vim pelo site da VG Construção e não encontrei o serviço que preciso na lista — quero um orçamento.',
+      contato: 'Olá! Vim pela página de contato do site da VG Construção e quero um orçamento.',
+      galeria: 'Olá! Vi a galeria no site da VG Construção e quero um orçamento.',
+      ctaFinal: 'Olá! Vim pelo site da VG Construção e quero falar sobre a minha obra.',
+      footer: 'Olá! Vim pelo site da VG Construção.',
+      floating: 'Olá! Vim pelo site da VG Construção e quero um orçamento rápido.'
     },
     link: function (key) {
       var msg = this.MESSAGES[key] || this.MESSAGES.header;
