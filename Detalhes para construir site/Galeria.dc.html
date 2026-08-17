@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta charset="utf-8" />
+  <title>Galeria de Trabalhos — S.O.S Gabriel Foz do Iguaçu</title>
+  <meta name="description" content="Veja fotos reais de trabalhos de pintura, elétrica, cerâmica, montagem de móveis e manutenção realizados pelo S.O.S Gabriel em Foz do Iguaçu/PR." />
+  <meta property="og:title" content="Galeria — S.O.S Gabriel Foz do Iguaçu" />
+  <meta property="og:description" content="Fotos reais de trabalhos concluídos em Foz do Iguaçu/PR: pintura, elétrica, cerâmica, montagem de móveis e mais." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { margin: 0; background: #16181B; }
+    ::selection { background: #F2B705; color: #16181B; }
+    a { color: #F2B705; }
+    a:hover { color: #F4F4F1; }
+    *:focus-visible { outline: 2px solid #F2B705; outline-offset: 2px; }
+    :root { --z-header: 150; --z-progress: 160; --z-fab: 180; --z-lightbox: 300; --z-menu: 400; }
+    @keyframes osGalleryEnter { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+    input[type="range"].os-compare::-webkit-slider-thumb { width: 1px; height: 1px; opacity: 0; }
+    input[type="range"].os-compare::-moz-range-thumb { width: 1px; height: 1px; opacity: 0; border: none; }
+  </style>
+  <script src="js/wa-data.js"></script>
+  <script src="js/gallery-data.js"></script>
+</helmet>
+
+<div style="background:#16181B;">
+  <dc-import name="Header" active-page="galeria" hint-size="100%,80px"></dc-import>
+
+  <section style="position:relative;overflow:hidden;background:#16181B;padding:56px 24px 0;">
+    <div style="{{ noiseOverlayStyle }}" aria-hidden="true"></div>
+    <div style="max-width:1160px;margin:0 auto;position:relative;z-index:2;">
+      <div style="display:flex;gap:8px;align-items:center;font-family:'Inter',sans-serif;font-size:13px;color:#8A8F98;">
+        <a href="Index.dc.html" style="color:#8A8F98;text-decoration:none;">Início</a>
+        <span>/</span>
+        <span style="color:#F2B705;">Galeria</span>
+      </div>
+      <h1 style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(34px,6vw,58px);letter-spacing:0.02em;text-transform:uppercase;color:#F4F4F1;margin:16px 0 0;">Galeria</h1>
+      <p style="font-family:'Inter',sans-serif;font-size:16px;color:#8A8F98;max-width:520px;margin:12px 0 0;line-height:1.6;">Trabalhos concluídos em Foz do Iguaçu — fotos reais, sem retoque de propaganda.</p>
+    </div>
+    <div style="height:14px;margin-top:32px;position:relative;z-index:2;">
+      <svg width="100%" height="14" viewBox="0 0 400 14" preserveAspectRatio="none" style="display:block;">
+        <sc-for list="{{ heroStripes }}" as="s" hint-placeholder-count="16">
+          <line x1="{{ s.x1 }}" y1="14" x2="{{ s.x2 }}" y2="0" stroke="#F2B705" stroke-width="9" vector-effect="non-scaling-stroke" stroke-dasharray="20" stroke-dashoffset="{{ s.offset }}" style="{{ s.style }}" />
+        </sc-for>
+      </svg>
+    </div>
+  </section>
+
+  <section style="background:#16181B;padding:40px 24px 0;">
+    <div style="max-width:1160px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px;">
+      <sc-for list="{{ filters }}" as="f" hint-placeholder-count="7">
+        <button type="button" onClick="{{ f.onClick }}" aria-pressed="{{ f.active }}" style="{{ f.style }}">{{ f.label }}</button>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="background:#16181B;padding:32px 24px 80px;">
+    <div style="max-width:1160px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));grid-auto-rows:10px;grid-auto-flow:dense;gap:14px;">
+      <sc-for list="{{ tiles }}" as="t" hint-placeholder-count="14">
+        <button type="button" onClick="{{ t.onOpen }}" aria-label="Ampliar foto: {{ t.title }}" style="{{ t.wrapStyle }}">
+          <img src="{{ t.src }}" alt="{{ t.title }}" loading="lazy" onError="{{ t.onError }}" style="width:100%;height:100%;object-fit:cover;display:block;" />
+          <sc-if value="{{ t.broken }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;background:#1E2126;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8A8F98" stroke-width="1.5" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7l1.5-3h5L16 7" /><circle cx="12" cy="13.5" r="3.5" /></svg>
+              <span style="font-family:'Inter',sans-serif;font-size:10px;color:#8A8F98;text-transform:uppercase;letter-spacing:0.08em;">Foto em breve</span>
+            </div>
+          </sc-if>
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(22,24,27,0.92),rgba(22,24,27,0.1) 55%);opacity:0;transition:opacity 200ms ease;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;padding:16px;text-align:left;" style-hover="opacity:1;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F2B705" stroke-width="1.8" style="margin-bottom:8px;" aria-hidden="true"><circle cx="10" cy="10" r="6" /><line x1="15" y1="15" x2="21" y2="21" /></svg>
+            <span style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:0.02em;text-transform:uppercase;color:#F4F4F1;">{{ t.title }}</span>
+            <span style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.08em;color:#F2B705;text-transform:uppercase;margin-top:4px;">{{ t.categoryLabel }}</span>
+          </div>
+        </button>
+      </sc-for>
+    </div>
+  </section>
+
+  <section ref="{{ baRef }}" style="background:#1E2126;border-top:1px solid #2A2E33;border-bottom:1px solid #2A2E33;padding:72px 24px;">
+    <div style="max-width:1160px;margin:0 auto;">
+      <span style="{{ sectionNumberStyle }}">Antes e depois</span>
+      <h2 style="{{ h2Style }}">Arraste e compare</h2>
+      <div style="{{ baRevealStyle }}display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px;margin-top:32px;">
+        <sc-for list="{{ compares }}" as="c" hint-placeholder-count="3">
+          <div>
+            <div style="position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border:1px solid #8A8F98;user-select:none;">
+              <img src="{{ c.after }}" alt="Depois — {{ c.label }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;" />
+              <span style="position:absolute;top:10px;right:10px;background:rgba(22,24,27,0.75);color:#F4F4F1;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:0.1em;padding:4px 8px;">DEPOIS</span>
+              <div style="position:absolute;inset:0;overflow:hidden;width:{{ c.pct }}%;pointer-events:none;">
+                <img src="{{ c.before }}" alt="Antes — {{ c.label }}" loading="lazy" style="{{ c.beforeImgStyle }}" />
+                <span style="position:absolute;top:10px;left:10px;background:rgba(22,24,27,0.75);color:#F4F4F1;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:0.1em;padding:4px 8px;">ANTES</span>
+              </div>
+              <div style="position:absolute;top:0;bottom:0;left:{{ c.pct }}%;width:2px;background:#F2B705;transform:translateX(-1px);pointer-events:none;"></div>
+              <div style="position:absolute;top:50%;left:{{ c.pct }}%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:#F2B705;display:flex;align-items:center;justify-content:center;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,0.4);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16181B" stroke-width="2" aria-hidden="true"><polyline points="9 6 3 12 9 18" /><polyline points="15 6 21 12 15 18" /></svg>
+              </div>
+              <input type="range" class="os-compare" min="0" max="100" value="{{ c.pct }}" onInput="{{ c.onChange }}" aria-label="Comparar antes e depois — {{ c.label }}" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0;cursor:ew-resize;" />
+            </div>
+            <span style="display:block;font-family:'Inter',sans-serif;font-size:13px;color:#8A8F98;margin-top:12px;">{{ c.label }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#16181B;padding:64px 24px;text-align:center;">
+    <div style="max-width:560px;margin:0 auto;">
+      <h2 style="{{ h2Style }}">Trabalhos de clientes reais em Foz do Iguaçu</h2>
+      <p style="font-family:'Inter',sans-serif;font-size:15px;color:#8A8F98;line-height:1.6;margin:14px 0 0;">Sem banco de imagens, sem foto de catálogo — cada trabalho aqui foi feito na sua região.</p>
+      <a href="{{ galeriaWa }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:#F2B705;color:#16181B;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.05em;text-transform:uppercase;padding:14px 26px;margin-top:24px;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);text-decoration:none;transition:transform 200ms ease;" style-hover="transform:translateY(-2px);">Pedir orçamento no WhatsApp</a>
+    </div>
+  </section>
+
+  <dc-import name="Footer" hint-size="100%,420px"></dc-import>
+
+  <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
+    <div ref="{{ lightboxRef }}" onClick="{{ onBackdropClick }}" role="dialog" aria-modal="true" aria-label="Visualização de foto" style="position:fixed;inset:0;background:rgba(22,24,27,0.95);z-index:var(--z-lightbox);display:flex;align-items:center;justify-content:center;padding:24px;">
+      <button type="button" onClick="{{ closeLightbox }}" aria-label="Fechar" style="position:absolute;top:20px;right:20px;width:44px;height:44px;background:transparent;border:1px solid #8A8F98;color:#F4F4F1;font-size:22px;line-height:1;cursor:pointer;">×</button>
+      <span style="position:absolute;top:28px;left:24px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.08em;color:#F2B705;">{{ lightboxCounter }}</span>
+      <button type="button" onClick="{{ prevLightbox }}" aria-label="Foto anterior" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);width:48px;height:48px;background:rgba(30,33,38,0.8);border:1px solid #8A8F98;color:#F4F4F1;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg>
+      </button>
+      <button type="button" onClick="{{ nextLightbox }}" aria-label="Próxima foto" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);width:48px;height:48px;background:rgba(30,33,38,0.8);border:1px solid #8A8F98;color:#F4F4F1;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6" /></svg>
+      </button>
+      <div onClick="{{ stopClick }}" style="max-width:min(90vw,900px);max-height:80vh;display:flex;flex-direction:column;align-items:center;gap:14px;">
+        <sc-if value="{{ lightboxSrc }}" hint-placeholder-val="{{ false }}">
+          <img src="{{ lightboxSrc }}" alt="{{ lightboxAlt }}" style="max-width:100%;max-height:70vh;object-fit:contain;border:1px solid #2A2E33;" />
+        </sc-if>
+        <span style="font-family:'Inter',sans-serif;font-size:14px;color:#F4F4F1;">{{ lightboxAlt }}</span>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  baRef = React.createRef();
+  lightboxRef = React.createRef();
+
+  state = {
+    reducedMotion: false,
+    heroStripeOffset: 20,
+    filter: 'todos',
+    displayedFilter: 'todos',
+    leavingIds: [],
+    photoErr: {},
+    baRevealed: false,
+    baPct: [50, 50, 50],
+    lightboxOpen: false,
+    lightboxIndex: 0,
+  };
+
+  get photos() { return (typeof window !== 'undefined' && window.GALLERY_PHOTOS) || []; }
+  get compareData() { return (typeof window !== 'undefined' && window.GALLERY_BEFORE_AFTER) || []; }
+
+  matches(cat, p) { return cat === 'todos' || p.category === cat; }
+
+  componentDidMount() {
+    const reduced = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      this.setState({ reducedMotion: true, heroStripeOffset: 0, baRevealed: true });
+    } else {
+      setTimeout(() => this.setState({ heroStripeOffset: 0 }), 20);
+      if (this.baRef.current) {
+        this._baIo = new IntersectionObserver((entries) => {
+          entries.forEach(e => { if (e.isIntersecting) { this.setState({ baRevealed: true }); this._baIo.unobserve(e.target); } });
+        }, { threshold: 0.2 });
+        this._baIo.observe(this.baRef.current);
+      }
+    }
+    this.onKeyDown = (e) => {
+      if (!this.state.lightboxOpen) return;
+      if (e.key === 'Escape') { this.closeLightbox(); return; }
+      if (e.key === 'ArrowLeft') { this.prevLightbox(); return; }
+      if (e.key === 'ArrowRight') { this.nextLightbox(); return; }
+      if (e.key === 'Tab' && this.lightboxRef.current) {
+        const focusables = this.lightboxRef.current.querySelectorAll('button, [href], input, [tabindex]:not([tabindex="-1"])');
+        if (!focusables.length) return;
+        const first = focusables[0], last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    };
+    document.addEventListener('keydown', this.onKeyDown);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.onKeyDown);
+    if (this._baIo) this._baIo.disconnect();
+    if (this._filterTimeout) clearTimeout(this._filterTimeout);
+  }
+
+  handleFilterClick = (cat) => () => {
+    if (cat === this.state.filter) return;
+    const current = this.photos.filter(p => this.matches(this.state.displayedFilter, p));
+    const leaving = this.state.reducedMotion ? [] : current.filter(p => !this.matches(cat, p)).map(p => p.id);
+    this.setState({ filter: cat, leavingIds: leaving });
+    clearTimeout(this._filterTimeout);
+    this._filterTimeout = setTimeout(() => {
+      this.setState({ displayedFilter: cat, leavingIds: [] });
+    }, this.state.reducedMotion ? 0 : 260);
+  };
+
+  onPhotoError = (id) => () => this.setState(s => ({ photoErr: { ...s.photoErr, [id]: true } }));
+
+  onCompareChange = (i) => (e) => {
+    const v = Number(e.target.value);
+    this.setState(s => { const arr = [...s.baPct]; arr[i] = v; return { baPct: arr }; });
+  };
+
+  openLightbox = (index) => () => {
+    this._lastFocused = document.activeElement;
+    this.setState({ lightboxOpen: true, lightboxIndex: index });
+    setTimeout(() => { if (this.lightboxRef.current) { const btn = this.lightboxRef.current.querySelector('button[aria-label="Fechar"]'); if (btn) btn.focus(); } }, 30);
+  };
+  closeLightbox = () => {
+    this.setState({ lightboxOpen: false });
+    if (this._lastFocused && this._lastFocused.focus) this._lastFocused.focus();
+  };
+  prevLightbox = () => {
+    const list = this.visibleList();
+    this.setState(s => ({ lightboxIndex: (s.lightboxIndex - 1 + list.length) % list.length }));
+  };
+  nextLightbox = () => {
+    const list = this.visibleList();
+    this.setState(s => ({ lightboxIndex: (s.lightboxIndex + 1) % list.length }));
+  };
+  onBackdropClick = (e) => { if (e.target === this.lightboxRef.current) this.closeLightbox(); };
+  stopClick = (e) => e.stopPropagation();
+
+  visibleList() { return this.photos.filter(p => this.matches(this.state.displayedFilter, p)); }
+
+  renderVals() {
+    const wa = (typeof window !== 'undefined' && window.WA_DATA) ? window.WA_DATA : null;
+    const link = (k) => wa ? wa.link(k) : 'https://wa.me/5545988431052';
+    const { reducedMotion, heroStripeOffset, filter, displayedFilter, leavingIds, photoErr, baRevealed, baPct, lightboxOpen, lightboxIndex } = this.state;
+
+    const sectionNumberStyle = "font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.15em;color:#F2B705;text-transform:uppercase;";
+    const h2Style = "font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(26px,3.8vw,36px);letter-spacing:0.02em;text-transform:uppercase;color:#F4F4F1;margin:10px 0 0;";
+    const noiseOverlayStyle = "position:absolute;inset:0;opacity:0.5;pointer-events:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\");";
+
+    const stripeCount = 16;
+    const spacing = 400 / stripeCount;
+    const heroStripes = Array.from({ length: stripeCount }, (_, i) => {
+      const cx = i * spacing + spacing / 2;
+      return { x1: (cx - 7).toFixed(1), x2: (cx + 7).toFixed(1), offset: heroStripeOffset, style: reducedMotion ? 'transition:none;' : `transition:stroke-dashoffset 800ms ease ${200 + i * 25}ms;` };
+    });
+
+    const catDefs = [
+      { key: 'todos', label: 'Todos' }, { key: 'pintura', label: 'Pintura' }, { key: 'ceramica', label: 'Cerâmica' },
+      { key: 'eletrica', label: 'Elétrica' }, { key: 'moveis', label: 'Montagem' }, { key: 'manutencao', label: 'Manutenção' },
+      { key: 'telhado', label: 'Telhado' },
+    ];
+    const filters = catDefs.map(c => {
+      const active = filter === c.key;
+      return {
+        ...c, active,
+        onClick: this.handleFilterClick(c.key),
+        style: `font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;padding:9px 16px;cursor:pointer;clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);border:1px solid ${active ? '#F2B705' : '#8A8F98'};background:${active ? '#F2B705' : 'transparent'};color:${active ? '#16181B' : '#F4F4F1'};transition:background 200ms ease,border-color 200ms ease,color 200ms ease;`,
+      };
+    });
+
+    const displayed = this.photos.filter(p => this.matches(displayedFilter, p) || leavingIds.includes(p.id));
+    const catLabelMap = { pintura: 'Pintura', ceramica: 'Cerâmica', eletrica: 'Elétrica', moveis: 'Montagem', manutencao: 'Manutenção', telhado: 'Telhado' };
+    const tiles = displayed.map((p, idx) => {
+      const leaving = leavingIds.includes(p.id);
+      const enterAnim = reducedMotion ? 'none' : `osGalleryEnter 400ms ease ${Math.min(idx, 8) * 40}ms both`;
+      return {
+        ...p,
+        categoryLabel: catLabelMap[p.category] || p.category,
+        broken: !!photoErr[p.id],
+        onError: this.onPhotoError(p.id),
+        onOpen: this.openLightbox(this.visibleList().findIndex(x => x.id === p.id)),
+        wrapStyle: `position:relative;overflow:hidden;grid-row:span ${p.span};border:1px solid #8A8F98;padding:0;background:#1E2126;cursor:pointer;display:block;text-align:left;opacity:${leaving ? 0 : 1};transform:scale(${leaving ? 0.85 : 1});transition:${reducedMotion ? 'none' : 'opacity 250ms ease,transform 250ms ease'};animation:${leaving ? 'none' : enterAnim};pointer-events:${leaving ? 'none' : 'auto'};`,
+      };
+    });
+    const tilesFinal = tiles;
+
+    const compares = this.compareData.map((c, i) => {
+      const pct = baPct[i];
+      return {
+        ...c,
+        pct,
+        onChange: this.onCompareChange(i),
+        beforeImgStyle: `position:absolute;top:0;left:0;height:100%;width:${pct > 0 ? (10000 / pct).toFixed(2) : 10000}%;object-fit:cover;`,
+      };
+    });
+
+    const list = this.visibleList();
+    const current = list[lightboxIndex] || list[0] || {};
+    const lightboxCounter = list.length ? `${String(lightboxIndex + 1).padStart(2, '0')} / ${String(list.length).padStart(2, '0')}` : '';
+
+    return {
+      sectionNumberStyle, h2Style, noiseOverlayStyle, heroStripes,
+      filters,
+      tiles: tilesFinal,
+      baRef: this.baRef,
+      baRevealStyle: `opacity:${baRevealed ? 1 : 0};transform:translateY(${baRevealed ? 0 : 24}px);transition:opacity 600ms ease,transform 600ms ease;`,
+      compares,
+      galeriaWa: link('galeria'),
+      lightboxOpen, lightboxRef: this.lightboxRef,
+      lightboxSrc: current.src || '', lightboxAlt: current.title || '',
+      lightboxCounter,
+      closeLightbox: this.closeLightbox, prevLightbox: this.prevLightbox, nextLightbox: this.nextLightbox,
+      onBackdropClick: this.onBackdropClick, stopClick: this.stopClick,
+    };
+  }
+}
+</script>
+</body>
+</html>

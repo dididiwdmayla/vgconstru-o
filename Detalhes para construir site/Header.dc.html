@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --z-header: 150; --z-progress: 160; --z-fab: 180; --z-lightbox: 300; --z-menu: 400; }
+    html { scrollbar-gutter: stable; }
+    a.osnav:focus-visible, button.osnav:focus-visible { outline: 2px solid #F2B705; outline-offset: 2px; }
+  </style>
+  <script src="js/wa-data.js"></script>
+</helmet>
+<div style="{{ progressWrapStyle }}" aria-hidden="true">
+  <div style="position:absolute;top:50%;left:50%;width:1px;height:10px;background:#2A2E33;transform:translate(-6px,-50%);"></div>
+  <div style="position:absolute;top:50%;left:50%;width:1px;height:10px;background:#2A2E33;transform:translate(5px,-50%);"></div>
+  <div style="{{ bubbleStyle }}"></div>
+</div>
+<header style="{{ headerStyle }}">
+  <a class="osnav" href="Index.dc.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <span style="width:10px;height:28px;background:#F2B705;flex-shrink:0;"></span>
+    <span style="display:flex;flex-direction:column;line-height:1;">
+      <span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;letter-spacing:0.03em;color:#F4F4F1;text-transform:uppercase;">S.O.S Gabriel</span>
+      <span style="font-family:'Inter',sans-serif;font-weight:500;font-size:10px;letter-spacing:0.14em;color:#8A8F98;text-transform:uppercase;margin-top:2px;">Serviços Gerais</span>
+    </span>
+  </a>
+
+  <sc-if value="{{ showDesktopNav }}" hint-placeholder-val="{{ true }}">
+    <nav style="display:flex;align-items:center;gap:28px;" aria-label="Navegação principal">
+      <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="5">
+        <a class="osnav" href="{{ item.href }}" style="{{ item.linkStyle }}">{{ item.label }}</a>
+      </sc-for>
+      <a class="osnav" href="{{ waHref }}" target="_blank" rel="noopener" aria-label="Falar no WhatsApp" style="display:inline-flex;align-items:center;gap:8px;background:#F2B705;color:#16181B;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;padding:10px 18px;clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);white-space:nowrap;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2z" stroke="#16181B" stroke-width="1.8" />
+          <path d="M8.3 8.3c.3-.9 1-1 1.5-.9.5.1 1 .3 1.2 1 .3.6-.2 1.4-.5 1.9-.3.5-.3.7 0 1.1.6.9 1.9 2.1 3.1 2.6.4.2.6.1.9-.2l.6-.7c.4-.4 1-.5 1.4-.2l1.5.9c.4.3.5.9.2 1.3-.6.9-1.9 1.6-3.1 1.4-2.4-.4-5.2-2.4-6.5-5.2-.5-1.1-.4-2.3.3-3.4z" fill="#16181B" />
+        </svg>
+        WhatsApp
+      </a>
+    </nav>
+  </sc-if>
+
+  <sc-if value="{{ showHamburger }}" hint-placeholder-val="{{ false }}">
+    <button ref="{{ hamburgerRef }}" class="osnav" aria-label="Abrir menu" aria-expanded="{{ menuOpen }}" aria-controls="os-mobile-menu" onClick="{{ toggleMenu }}" style="width:42px;height:42px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;background:transparent;border:1px solid #8A8F98;cursor:pointer;flex-shrink:0;">
+      <span style="width:20px;height:2px;background:#F4F4F1;"></span>
+      <span style="width:20px;height:2px;background:#F4F4F1;"></span>
+      <span style="width:20px;height:2px;background:#F4F4F1;"></span>
+    </button>
+  </sc-if>
+</header>
+
+<sc-if value="{{ mountMobileMenu }}" hint-placeholder-val="{{ false }}">
+  <div id="os-mobile-menu" ref="{{ menuPanelRef }}" role="dialog" aria-modal="true" aria-label="Menu de navegação" aria-hidden="{{ menuHidden }}" style="{{ menuPanelStyle }}">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+      <span style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;letter-spacing:0.03em;color:#F4F4F1;text-transform:uppercase;">S.O.S Gabriel</span>
+      <button ref="{{ closeBtnRef }}" class="osnav" aria-label="Fechar menu" onClick="{{ closeMenu }}" style="width:42px;height:42px;background:transparent;border:1px solid #8A8F98;color:#F4F4F1;font-size:22px;line-height:1;cursor:pointer;">×</button>
+    </div>
+    <nav style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;" aria-label="Navegação mobile">
+      <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="5">
+        <a class="osnav" href="{{ item.href }}" onClick="{{ closeMenu }}" style="{{ item.mobileLinkStyle }}">{{ item.label }}</a>
+      </sc-for>
+    </nav>
+    <div style="{{ menuFooterStyle }}">
+      <a href="tel:+5545988431052" class="osnav" style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;letter-spacing:0.02em;color:#F4F4F1;text-decoration:none;">(45) 98843-1052</a>
+      <a class="osnav" href="{{ waHref }}" target="_blank" rel="noopener" onClick="{{ closeMenu }}" style="display:flex;justify-content:center;align-items:center;gap:8px;background:#F2B705;color:#16181B;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:0.05em;text-transform:uppercase;padding:16px;text-decoration:none;">Falar no WhatsApp</a>
+    </div>
+  </div>
+</sc-if>
+
+<div style="height:{{ spacerHeight }};"></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:80},&quot;activePage&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;index&quot;,&quot;options&quot;:[&quot;index&quot;,&quot;servicos&quot;,&quot;galeria&quot;,&quot;sobre&quot;,&quot;contato&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  hamburgerRef = React.createRef();
+  menuPanelRef = React.createRef();
+  closeBtnRef = React.createRef();
+
+  state = { scrolled: false, isMobile: false, menuOpen: false, scrollProgress: 0 };
+
+  componentDidMount() {
+    this.reducedMotion = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      this.setState({ scrolled: window.scrollY > 40, scrollProgress: max > 0 ? window.scrollY / max : 0 });
+    };
+    this.onResize = () => {
+      const mobile = window.innerWidth < 900;
+      this.setState({ isMobile: mobile });
+      if (!mobile && this.state.menuOpen) this.closeMenu();
+    };
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    window.addEventListener('resize', this.onResize);
+    this.onResize();
+    this.onScroll();
+  }
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.onScroll);
+    window.removeEventListener('resize', this.onResize);
+    document.removeEventListener('keydown', this.onKeyDown);
+    if (this._scrollLocked) document.body.style.overflow = '';
+  }
+
+  onKeyDown = (e) => {
+    if (e.key === 'Escape') { e.preventDefault(); this.closeMenu(); return; }
+    if (e.key === 'Tab' && this.menuPanelRef.current) {
+      const focusables = this.menuPanelRef.current.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
+      if (!focusables.length) return;
+      const first = focusables[0], last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  };
+
+  openMenu = () => {
+    this._lastFocused = document.activeElement;
+    this.setState({ menuOpen: true });
+    document.body.style.overflow = 'hidden';
+    this._scrollLocked = true;
+    document.addEventListener('keydown', this.onKeyDown);
+    if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('os:menu', { detail: { open: true } }));
+    setTimeout(() => { if (this.closeBtnRef.current) this.closeBtnRef.current.focus(); }, 30);
+  };
+
+  closeMenu = () => {
+    this.setState({ menuOpen: false });
+    document.body.style.overflow = '';
+    this._scrollLocked = false;
+    document.removeEventListener('keydown', this.onKeyDown);
+    if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('os:menu', { detail: { open: false } }));
+    if (this.hamburgerRef.current) this.hamburgerRef.current.focus();
+  };
+
+  toggleMenu = () => { if (this.state.menuOpen) this.closeMenu(); else this.openMenu(); };
+
+  renderVals() {
+    const active = this.props.activePage || 'index';
+    const base = [
+      { id: 'index', label: 'Início', href: 'Index.dc.html' },
+      { id: 'servicos', label: 'Serviços', href: 'Servicos.dc.html' },
+      { id: 'galeria', label: 'Galeria', href: 'Galeria.dc.html' },
+      { id: 'sobre', label: 'Sobre', href: 'Sobre.dc.html' },
+      { id: 'contato', label: 'Contato', href: 'Contato.dc.html' },
+    ];
+    const navItems = base.map(it => ({
+      ...it,
+      linkStyle: `font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;color:${it.id === active ? '#F2B705' : '#F4F4F1'};text-decoration:none;padding-bottom:4px;border-bottom:${it.id === active ? '2px solid #F2B705' : '2px solid transparent'};transition:color 200ms ease,border-color 200ms ease;`,
+      mobileLinkStyle: `font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:30px;letter-spacing:0.03em;text-transform:uppercase;color:${it.id === active ? '#F2B705' : '#F4F4F1'};text-decoration:none;`,
+    }));
+
+    const wa = (typeof window !== 'undefined' && window.WA_DATA) ? window.WA_DATA : null;
+    const waHref = wa ? wa.link('header') : 'https://wa.me/5545988431052';
+    const { scrolled, isMobile, menuOpen } = this.state;
+
+    const headerStyle = `position:fixed;top:4px;left:0;right:0;z-index:var(--z-header);display:flex;align-items:center;justify-content:space-between;padding:${scrolled ? '12px 24px' : '20px 24px'};background:${scrolled ? 'rgba(22,24,27,0.97)' : 'transparent'};border-bottom:1px solid ${scrolled ? '#2A2E33' : 'transparent'};box-shadow:${scrolled ? '0 8px 24px rgba(0,0,0,0.35)' : 'none'};transition:padding 250ms ease,background 250ms ease,border-color 250ms ease,box-shadow 250ms ease;backdrop-filter:${scrolled ? 'blur(6px)' : 'none'};`;
+    const pct = Math.min(99, Math.max(1, Math.round((this.state.scrollProgress || 0) * 100)));
+    const bubbleStyle = `position:absolute;top:50%;left:${pct}%;width:10px;height:10px;border-radius:50%;background:#F2B705;box-shadow:0 0 6px rgba(242,183,5,0.6);transform:translate(-50%,-50%);transition:${this.reducedMotion ? 'none' : 'left 80ms linear'};`;
+    const progressWrapStyle = `position:fixed;top:0;left:0;right:0;height:4px;background:#16181B;z-index:var(--z-progress);overflow:visible;opacity:${menuOpen ? 0 : 1};pointer-events:${menuOpen ? 'none' : 'auto'};transition:opacity 150ms ease;`;
+
+    const dur = this.reducedMotion ? '1ms' : '250ms';
+    const menuPanelStyle = `position:fixed;inset:0;height:100dvh;width:100vw;background:#16181B;z-index:var(--z-menu);display:flex;flex-direction:column;padding:24px 24px 32px;box-sizing:border-box;transform:translateY(${menuOpen ? '0' : '-100%'});transition:transform ${dur} ease,visibility 0s linear ${menuOpen ? '0s' : dur};visibility:${menuOpen ? 'visible' : 'hidden'};pointer-events:${menuOpen ? 'auto' : 'none'};`;
+    const menuFooterStyle = `display:flex;flex-direction:column;align-items:center;gap:16px;flex-shrink:0;opacity:${menuOpen ? 1 : 0};transform:translateY(${menuOpen ? 0 : 10}px);transition:${this.reducedMotion ? 'none' : `opacity 350ms ease ${menuOpen ? '250ms' : '0s'},transform 350ms ease ${menuOpen ? '250ms' : '0s'}`};`;
+
+    const navItemsStyled = navItems.map((it, i) => ({
+      ...it,
+      mobileLinkStyle: it.mobileLinkStyle + `opacity:${menuOpen ? 1 : 0};transform:translateY(${menuOpen ? 0 : 14}px);transition:${this.reducedMotion ? 'none' : `opacity 350ms ease ${menuOpen ? 150 + i * 50 : 0}ms,transform 350ms ease ${menuOpen ? 150 + i * 50 : 0}ms`};`,
+    }));
+
+    return {
+      navItems: navItemsStyled,
+      waHref,
+      headerStyle,
+      progressWrapStyle,
+      bubbleStyle,
+      showDesktopNav: !isMobile,
+      showHamburger: isMobile,
+      mountMobileMenu: isMobile,
+      menuOpen,
+      menuHidden: !menuOpen,
+      menuPanelStyle,
+      menuFooterStyle,
+      hamburgerRef: this.hamburgerRef,
+      menuPanelRef: this.menuPanelRef,
+      closeBtnRef: this.closeBtnRef,
+      toggleMenu: this.toggleMenu,
+      closeMenu: this.closeMenu,
+      spacerHeight: '84px',
+    };
+  }
+}
+</script>
+</body>
+</html>
