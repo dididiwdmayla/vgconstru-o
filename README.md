@@ -35,6 +35,20 @@ nem nos SVG embutidos, que herdam a cor por CSS ou `currentColor`.
 | `--text` | `#F2F4F8` | texto principal |
 | `--muted` | `#8FA0BF` | texto secundário |
 
+## Fluxo de contato
+
+Nenhum botão do site abre o WhatsApp direto: todo CTA aponta para
+`contato.html?servico=<slug>#formulario`. Na página de contato o JS lê o parâmetro,
+pré-seleciona o serviço, mostra a linha "Orçamento de: …", rola até o formulário e
+foca o primeiro campo vazio. `servico=geral` (ou ausente) mantém o formulário no
+estado padrão. O WhatsApp só é aberto no envio, com nome, telefone, serviço, bairro
+e descrição na mensagem.
+
+Os slugs válidos são os oito serviços (`construcao`, `reforma`, `pintura`, `ceramica`,
+`eletrica`, `instalacoes`, `telhado`, `manutencao`) mais `geral`. A lista vive em
+`VG.SERVICES` (`js/main.js`) e é a mesma fonte que monta os links de CTA e as opções
+do select — não há como as duas listas divergirem.
+
 ## Fotos
 
 As imagens em `assets/fotos/` são placeholders marcados com "substituir por foto real" —
