@@ -37,17 +37,18 @@ nem nos SVG embutidos, que herdam a cor por CSS ou `currentColor`.
 
 ## Fluxo de contato
 
-Nenhum botão do site abre o WhatsApp direto: todo CTA aponta para
-`contato.html?servico=<slug>#formulario`. Na página de contato o JS lê o parâmetro,
-pré-seleciona o serviço, mostra a linha "Orçamento de: …", rola até o formulário e
-foca o primeiro campo vazio. `servico=geral` (ou ausente) mantém o formulário no
-estado padrão. O WhatsApp só é aberto no envio, com nome, telefone, serviço, bairro
-e descrição na mensagem.
+Todo CTA do site abre o WhatsApp direto — nenhum passa por formulário. Qualquer
+elemento com `data-wa="chave"` tem o `href` montado em tempo de execução por
+`wireWaLinks()` (`js/main.js`), a partir do objeto único `WA_DATA.MESSAGES`: os oito
+serviços (`construcao`, `reforma`, `pintura`, `ceramica`, `eletrica`, `instalacoes`,
+`telhado`, `manutencao`) mais `geral`, usado pelos CTAs genéricos (hero, header, menu
+mobile, botão flutuante, CTA final e rodapé). Editar uma mensagem — ou adicionar uma
+origem nova — é mudar `WA_DATA.MESSAGES` num lugar só; o link abre em nova aba
+(`target="_blank" rel="noopener"`) com o texto já codificado para `https://wa.me/5545988431052`.
 
-Os slugs válidos são os oito serviços (`construcao`, `reforma`, `pintura`, `ceramica`,
-`eletrica`, `instalacoes`, `telhado`, `manutencao`) mais `geral`. A lista vive em
-`VG.SERVICES` (`js/main.js`) e é a mesma fonte que monta os links de CTA e as opções
-do select — não há como as duas listas divergirem.
+A página de contato não tem formulário: a coluna de canais diretos (telefone, e-mail,
+Instagram, horário) fica ao lado de um bloco de CTA em destaque que também abre o
+WhatsApp, e o FAQ em acordeão continua abaixo.
 
 ## Fotos
 
