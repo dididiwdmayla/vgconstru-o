@@ -1,35 +1,40 @@
-// VG Construção — shared site chrome: header, footer, WhatsApp links,
+// VG Construção — shared site chrome: header, footer, CTA links,
 // scroll-reveal, broken-image fallback and the CTA button loop.
 // Runs on every page. Page-specific behaviour lives in js/interactions.js.
 (function () {
   'use strict';
 
-  var WA_DATA = {
+  // Fonte única dos serviços: os links de CTA do site e o select do formulário
+  // de contato saem daqui, então as duas listas não têm como divergir.
+  var VG = {
     PHONE: '5545988431052',
-    MESSAGES: {
-      header: 'Olá! Vim pelo site da VG Construção e quero falar sobre uma obra ou serviço.',
-      hero: 'Olá! Vim pelo site da VG Construção e quero um orçamento sem compromisso.',
-      construcao: 'Olá! Vim pelo site da VG Construção e quero um orçamento de construção e ampliação.',
-      reforma: 'Olá! Vim pelo site da VG Construção e quero um orçamento de reforma e acabamento.',
-      pintura: 'Olá! Vim pelo site da VG Construção e quero um orçamento de pintura.',
-      ceramica: 'Olá! Vim pelo site da VG Construção e quero um orçamento de cerâmica e porcelanato.',
-      eletrica: 'Olá! Vim pelo site da VG Construção e quero um orçamento de elétrica.',
-      instalacoes: 'Olá! Vim pelo site da VG Construção e quero um orçamento de instalações.',
-      telhado: 'Olá! Vim pelo site da VG Construção e quero um orçamento de telhado e impermeabilização.',
-      manutencao: 'Olá! Vim pelo site da VG Construção e quero um orçamento de manutenção geral.',
-      servicosGenerico: 'Olá! Vim pelo site da VG Construção e não encontrei o serviço que preciso na lista — quero um orçamento.',
-      contato: 'Olá! Vim pela página de contato do site da VG Construção e quero um orçamento.',
-      galeria: 'Olá! Vi a galeria no site da VG Construção e quero um orçamento.',
-      ctaFinal: 'Olá! Vim pelo site da VG Construção e quero falar sobre a minha obra.',
-      footer: 'Olá! Vim pelo site da VG Construção.',
-      floating: 'Olá! Vim pelo site da VG Construção e quero um orçamento rápido.'
+    SERVICES: [
+      { slug: 'construcao', nome: 'Construção e ampliação' },
+      { slug: 'reforma', nome: 'Reforma e acabamento' },
+      { slug: 'pintura', nome: 'Pintura' },
+      { slug: 'ceramica', nome: 'Cerâmica e porcelanato' },
+      { slug: 'eletrica', nome: 'Elétrica' },
+      { slug: 'instalacoes', nome: 'Instalações' },
+      { slug: 'telhado', nome: 'Telhado e impermeabilização' },
+      { slug: 'manutencao', nome: 'Manutenção geral' }
+    ],
+    // Opção extra do formulário: não é um serviço da lista, só um destino de fallback.
+    OUTRO: 'Outro / não sei ainda',
+    find: function (slug) {
+      var found = null;
+      this.SERVICES.forEach(function (sv) { if (sv.slug === slug) found = sv; });
+      return found;
     },
-    link: function (key) {
-      var msg = this.MESSAGES[key] || this.MESSAGES.header;
-      return 'https://wa.me/' + this.PHONE + '?text=' + encodeURIComponent(msg);
+    // Todo CTA leva ao formulário da página de contato já sabendo o que a pessoa quer.
+    ctaHref: function (slug) {
+      var sv = this.find(slug);
+      return 'contato.html?servico=' + (sv ? sv.slug : 'geral') + '#formulario';
+    },
+    waLink: function (text) {
+      return 'https://wa.me/' + this.PHONE + '?text=' + encodeURIComponent(text);
     }
   };
-  window.WA_DATA = WA_DATA;
+  window.VG = VG;
 
   var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -38,10 +43,23 @@
     else fn();
   }
 
-  // ---- WhatsApp links: any element with data-wa="key" gets its href set ----
-  function wireWaLinks() {
-    document.querySelectorAll('[data-wa]').forEach(function (el) {
-      el.setAttribute('href', WA_DATA.link(el.getAttribute('data-wa')));
+  // ---- CTA links: any element with data-cta="slug" points at the contact form ----
+  // O href já vem no HTML; aqui ele é reescrito a partir do registro acima para
+  // garantir que continue batendo com a lista de serviços. Na própria página de
+  // contato o clique vira rolagem + preenchimento, sem recarregar.
+  function wireCtaLinks() {
+    var onContato = document.body.getAttribute('data-page') === 'contato';
+    document.querySelectorAll('[data-cta]').forEach(function (el) {
+      var slug = el.getAttribute('data-cta');
+      if (onContato) {
+        el.setAttribute('href', '#formulario');
+        el.addEventListener('click', function (e) {
+          e.preventDefault();
+          document.dispatchEvent(new CustomEvent('vg:pedir', { detail: { slug: slug } }));
+        });
+      } else {
+        el.setAttribute('href', VG.ctaHref(slug));
+      }
     });
   }
 
@@ -206,7 +224,7 @@
   window.osReducedMotion = reducedMotion;
 
   ready(function () {
-    wireWaLinks();
+    wireCtaLinks();
     initHeader();
     initFooterYear();
     initReveal();

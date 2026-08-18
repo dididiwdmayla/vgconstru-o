@@ -27,12 +27,17 @@
 
   --logo-h: 40px;
 
+  /* Assinatura de autoria (cores próprias do autor, fora da paleta da marca) */
+  --sign-pink: #FF2E88;
+  --sign-lime: #C8F531;
+
   --font-display: 'Barlow Condensed', sans-serif;
   --font-body: 'Inter', sans-serif;
 }
 
 /* ---------- Reset & base ---------- */
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { scroll-padding-top: 100px; scrollbar-gutter: stable; }
 html.has-sub-nav { scroll-padding-top: 156px; }
 body { margin: 0; background: var(--bg); font-family: var(--font-body); }
@@ -593,6 +598,30 @@ a.contact-list__item:hover .contact-list__value, a.contact-list__item:hover .con
 .form-status { font-family: var(--font-body); font-size: 13px; color: var(--accent-2-text); line-height: 1.5; display: none; }
 .form-status.is-visible { display: block; }
 
+.form-context {
+  font-family: var(--font-body); font-size: 14px; color: var(--muted); line-height: 1.4;
+  margin: 16px 0 0; padding-left: 12px; border-left: 2px solid var(--accent);
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px;
+}
+.form-context strong {
+  font-family: var(--font-display); font-weight: 800; font-size: 17px; letter-spacing: .02em;
+  text-transform: uppercase; color: var(--accent);
+}
+
+.form-success {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-top: 24px;
+  background: var(--bg); border: 1px solid var(--border-light); padding: 26px 24px;
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+}
+.form-success svg { stroke: var(--accent); }
+.form-success__title {
+  font-family: var(--font-display); font-weight: 800; font-size: 22px; letter-spacing: .02em;
+  text-transform: uppercase; color: var(--text); margin: 4px 0 0;
+}
+.form-success__title:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.form-success__desc { font-family: var(--font-body); font-size: 14px; line-height: 1.6; color: var(--muted); margin: 0; max-width: 420px; }
+.form-success__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+
 .faq-list { display: flex; flex-direction: column; gap: 2px; margin-top: 32px; max-width: 760px; }
 .faq-item { border-bottom: 1px solid var(--border); }
 .faq-item__q { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; background: transparent; border: none; padding: 20px 0; cursor: pointer; text-align: left; }
@@ -604,3 +633,47 @@ a.contact-list__item:hover .contact-list__value, a.contact-list__item:hover .con
 .faq-item.is-open .faq-item__panel { grid-template-rows: 1fr; }
 .faq-item__panel-inner { min-height: 0; overflow: hidden; }
 .faq-item__panel p { font-family: var(--font-body); font-size: 15px; color: var(--muted); line-height: 1.65; margin: 0; padding: 0 0 20px; max-width: 620px; }
+
+/* ---------- Assinatura de autoria (rodapé) ---------- */
+.site-footer__sign {
+  max-width: 1160px; margin: 16px auto 0; padding-top: 4px;
+  border-top: 1px solid var(--border); display: flex; justify-content: flex-end;
+}
+.signature {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 2px;
+  font-family: var(--font-body); font-size: 13px; line-height: 1.4; letter-spacing: .01em;
+  color: var(--muted); text-decoration: none; opacity: .65; transition: opacity 250ms ease;
+}
+.signature:hover, .signature:focus-visible { color: var(--muted); opacity: 1; }
+.signature__text { position: relative; display: inline-block; }
+/* linha em verde lima que se desenha da esquerda para a direita */
+.signature__text::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px;
+  background: var(--sign-lime); transform: scaleX(0); transform-origin: left center;
+  transition: transform 250ms ease;
+}
+.signature:hover .signature__text::after,
+.signature:focus-visible .signature__text::after { transform: scaleX(1); }
+/* Os "i" usam o glifo sem pingo (ı) e ganham o ponto desenhado em CSS:
+   no tamanho do rodapé o pingo da fonte fica pequeno demais. */
+.signature__i { display: inline-block; position: relative; line-height: 1; }
+/* 1ex = altura-x da fonte em uso e .145em = distância da base da caixa até a
+   linha de base (line-height: 1), então o ponto cai onde cairia o pingo real. */
+.signature__i::before {
+  content: ''; position: absolute; left: 50%; bottom: calc(1ex + .145em + 1px);
+  width: 4px; height: 4px; border-radius: 50%; transform: translateX(-50%);
+}
+.signature__i--pink::before { background: var(--sign-pink); }
+.signature__i--lime::before { background: var(--sign-lime); }
+/* ponto final, mesmo tratamento */
+.signature__stop { display: inline-block; position: relative; width: 4px; line-height: 1; }
+/* span vazio: a linha de base é a própria borda inferior, então bottom: 0 assenta o ponto nela */
+.signature__stop::before {
+  content: ''; position: absolute; left: 0; bottom: 0; width: 4px; height: 4px;
+  border-radius: 50%; background: var(--sign-lime);
+}
+
+@media (max-width: 720px) {
+  .site-footer__sign { justify-content: center; }
+  .signature { opacity: .8; }
+}
