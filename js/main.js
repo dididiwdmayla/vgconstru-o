@@ -1,40 +1,30 @@
-// VG Construção — shared site chrome: header, footer, CTA links,
+// VG Construção — shared site chrome: header, footer, WhatsApp links,
 // scroll-reveal, broken-image fallback and the CTA button loop.
 // Runs on every page. Page-specific behaviour lives in js/interactions.js.
 (function () {
   'use strict';
 
-  // Fonte única dos serviços: os links de CTA do site e o select do formulário
-  // de contato saem daqui, então as duas listas não têm como divergir.
-  var VG = {
+  // Fonte única das mensagens de WhatsApp: todo CTA do site sai daqui, então
+  // editar uma mensagem — ou adicionar uma origem nova — é mudar uma linha só.
+  var WA_DATA = {
     PHONE: '5545988431052',
-    SERVICES: [
-      { slug: 'construcao', nome: 'Construção e ampliação' },
-      { slug: 'reforma', nome: 'Reforma e acabamento' },
-      { slug: 'pintura', nome: 'Pintura' },
-      { slug: 'ceramica', nome: 'Cerâmica e porcelanato' },
-      { slug: 'eletrica', nome: 'Elétrica' },
-      { slug: 'instalacoes', nome: 'Instalações' },
-      { slug: 'telhado', nome: 'Telhado e impermeabilização' },
-      { slug: 'manutencao', nome: 'Manutenção geral' }
-    ],
-    // Opção extra do formulário: não é um serviço da lista, só um destino de fallback.
-    OUTRO: 'Outro / não sei ainda',
-    find: function (slug) {
-      var found = null;
-      this.SERVICES.forEach(function (sv) { if (sv.slug === slug) found = sv; });
-      return found;
+    MESSAGES: {
+      geral: 'Olá! Vim pelo site da VG Construção e quero fazer um orçamento.',
+      construcao: 'Olá! Vim pelo site da VG Construção e quero um orçamento de construção e ampliação.',
+      reforma: 'Olá! Vim pelo site da VG Construção e quero um orçamento de reforma e acabamento.',
+      pintura: 'Olá! Vim pelo site da VG Construção e quero um orçamento de pintura.',
+      ceramica: 'Olá! Vim pelo site da VG Construção e quero um orçamento de cerâmica e porcelanato.',
+      eletrica: 'Olá! Vim pelo site da VG Construção e quero um orçamento de elétrica.',
+      instalacoes: 'Olá! Vim pelo site da VG Construção e quero um orçamento de instalações.',
+      telhado: 'Olá! Vim pelo site da VG Construção e quero um orçamento de telhado e impermeabilização.',
+      manutencao: 'Olá! Vim pelo site da VG Construção e quero um orçamento de manutenção geral.'
     },
-    // Todo CTA leva ao formulário da página de contato já sabendo o que a pessoa quer.
-    ctaHref: function (slug) {
-      var sv = this.find(slug);
-      return 'contato.html?servico=' + (sv ? sv.slug : 'geral') + '#formulario';
-    },
-    waLink: function (text) {
-      return 'https://wa.me/' + this.PHONE + '?text=' + encodeURIComponent(text);
+    link: function (key) {
+      var msg = this.MESSAGES[key] || this.MESSAGES.geral;
+      return 'https://wa.me/' + this.PHONE + '?text=' + encodeURIComponent(msg);
     }
   };
-  window.VG = VG;
+  window.WA_DATA = WA_DATA;
 
   var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -43,23 +33,10 @@
     else fn();
   }
 
-  // ---- CTA links: any element with data-cta="slug" points at the contact form ----
-  // O href já vem no HTML; aqui ele é reescrito a partir do registro acima para
-  // garantir que continue batendo com a lista de serviços. Na própria página de
-  // contato o clique vira rolagem + preenchimento, sem recarregar.
-  function wireCtaLinks() {
-    var onContato = document.body.getAttribute('data-page') === 'contato';
-    document.querySelectorAll('[data-cta]').forEach(function (el) {
-      var slug = el.getAttribute('data-cta');
-      if (onContato) {
-        el.setAttribute('href', '#formulario');
-        el.addEventListener('click', function (e) {
-          e.preventDefault();
-          document.dispatchEvent(new CustomEvent('vg:pedir', { detail: { slug: slug } }));
-        });
-      } else {
-        el.setAttribute('href', VG.ctaHref(slug));
-      }
+  // ---- WhatsApp links: any element with data-wa="key" gets its href set ----
+  function wireWaLinks() {
+    document.querySelectorAll('[data-wa]').forEach(function (el) {
+      el.setAttribute('href', WA_DATA.link(el.getAttribute('data-wa')));
     });
   }
 
@@ -224,7 +201,7 @@
   window.osReducedMotion = reducedMotion;
 
   ready(function () {
-    wireCtaLinks();
+    wireWaLinks();
     initHeader();
     initFooterYear();
     initReveal();
